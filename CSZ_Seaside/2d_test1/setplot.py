@@ -74,6 +74,7 @@ def setplot(plotdata):
     plotitem.pcolor_cmax = 1.0
     plotitem.add_colorbar = True
     plotitem.amr_celledges_show = [0,0,0]
+    plotitem.patchedges_show = [0,0,0,1]
     plotitem.patchedges_show = 1
 
     # Land
@@ -84,8 +85,8 @@ def setplot(plotdata):
     plotitem.pcolor_cmin = 0.0
     plotitem.pcolor_cmax = 100.0
     plotitem.add_colorbar = False
-    plotitem.amr_celledges_show = [1,0]
-    plotitem.patchedges_show = 1
+    plotitem.amr_celledges_show = [0]
+    plotitem.patchedges_show = [0,0,0,1]
     #plotaxes.xlimits = [-20,20]
     #plotaxes.ylimits = [20,60]
 
@@ -131,7 +132,7 @@ def setplot(plotdata):
     plotitem.pcolor_cmax = 1.0
     plotitem.add_colorbar = False
     plotitem.amr_celledges_show = [0]
-    plotitem.patchedges_show = 0
+    plotitem.patchedges_show = [0,0,0,1]
 
     # Land
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
@@ -142,8 +143,8 @@ def setplot(plotdata):
     plotitem.pcolor_cmin = 0.0
     plotitem.pcolor_cmax = 100.0
     plotitem.add_colorbar = False
-    plotitem.amr_celledges_show = [1,0,0,0,0]
-    plotitem.patchedges_show = 1
+    plotitem.amr_celledges_show = [0]
+    plotitem.patchedges_show = [0,0,0,1]
 
     # contour lines:
     plotitem = plotaxes.new_plotitem(plot_type='2d_contour')

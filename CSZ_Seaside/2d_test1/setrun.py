@@ -68,9 +68,9 @@ def setrun(claw_pkg='geoclaw'):
     clawdata.lower[1] = 55.0          # ylower
     clawdata.upper[1] = 65.0          # yupper
 
-    # Number of grid cells:
-    clawdata.num_cells[0] = 48      # mx
-    clawdata.num_cells[1] = 40      # my
+    # Number of grid cells for 5' grid:
+    clawdata.num_cells[0] = 12*12      # mx
+    clawdata.num_cells[1] = 10*12      # my
 
 
     # ---------------
@@ -117,7 +117,7 @@ def setrun(claw_pkg='geoclaw'):
     if clawdata.output_style==1:
         # Output ntimes frames at equally spaced times up to tfinal:
         # Can specify num_output_times = 0 for no output
-        clawdata.num_output_times = 12
+        clawdata.num_output_times = 24
         clawdata.tfinal = 3600.
         clawdata.output_t0 = True  # output at initial (or restart) time?
 
@@ -161,7 +161,7 @@ def setrun(claw_pkg='geoclaw'):
 
     # Initial time step for variable dt.
     # (If dt_variable==0 then dt=dt_initial for all steps)
-    clawdata.dt_initial = 16.0
+    clawdata.dt_initial = 0.4
 
     # Max time step to be allowed if variable dt used:
     clawdata.dt_max = 1e+99
@@ -286,8 +286,8 @@ def setrun(claw_pkg='geoclaw'):
     amrdata.amr_levels_max = 4
 
     # List of refinement ratios at each level (length at least amr_level_max-1)
-    # dx = 15', 1', 15", 3", 1", 1/3"
-    refinement_ratios = [15, 4, 5, 3, 3]
+    # dx = 5', 1', 15", 3", 1", 1/3"
+    refinement_ratios = [5, 4, 5, 3, 3]
     amrdata.refinement_ratios_x = refinement_ratios
     amrdata.refinement_ratios_y = refinement_ratios
     amrdata.refinement_ratios_t = refinement_ratios
@@ -335,7 +335,8 @@ def setrun(claw_pkg='geoclaw'):
 
     # default on full domain
     regions.append([1, 1,  0., 1e9, 70, 82, 55, 65])
-    regions.append([1, 3,  0., 1e9, 78, 80.5, 60.7, 62])
+    regions.append([3, 3,  0., 1e9, 78.5, 81, 60.5, 62.5])
+    regions.append([1, 4,  0., 1e9, 79.7, 80.2, 61.6, 61.85])
     regions.append([1, 6,  0., 1e9, 79.9, 80.12, 61.65, 61.77])
 
 
@@ -381,7 +382,8 @@ def setrun(claw_pkg='geoclaw'):
     dtopofiles = rundata.dtopo_data.dtopofiles
     # for moving topography, append lines of the form :
     #   [topotype, fname]
-    dtopofiles.append([3, 'L1_dtopo.dtt3'])
+    dtopofiles.append([3, 'L1radial.dtt3'])
+    rundata.dtopo_data.dt_max_dtopo = 0.4
 
 
     # == setqinit.data values ==
