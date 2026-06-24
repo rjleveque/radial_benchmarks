@@ -1,0 +1,29 @@
+# See docs at: https://mystmd.org/guide/frontmatter
+version: 1
+project:
+  title: radial_benchmarks
+  description: Work in Progress for NTHMP benchmarking
+  # keywords: []
+  authors: ['Randall J LeVeque']
+  # github:
+  # To autogenerate a Table of Contents, run "jupyter book init --write-toc"
+  bibliography:
+    - docs/references.bib
+  exports:
+    - format: pdf
+      template: plain_latex_book
+      output: exports/radial_benchmarks.pdf
+      articles: index.md
+  toc:
+    - file: index.md
+    - title: Overview and introduction
+      children:
+        - file: docs/intro.md
+        - file: docs/test1.md
+    - file: docs/biblio.md
+
+site:
+  template: book-theme
+  # options:
+  #   favicon: favicon.ico
+  #   logo: site_logo.png
