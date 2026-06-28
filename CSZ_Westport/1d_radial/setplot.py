@@ -9,15 +9,20 @@ from clawpack.geoclaw.data import Rearth, LAT2METER
 fname_celledges = os.path.abspath('celledges_10m.txt')
 
 # reference solution:
-res0 = '1m'
-#outdir0 = f'_output_5mG_{res0}'
-outdir0 = None
+res0 = '5m'
+outdir0 = f'_output_5mG_{res0}'
+#outdir0 = None
 #outdir0 = 'xxxx'
 
 
 if outdir0 is not None:
     path_celledges0 = os.path.abspath(f'celledges_{res0}.txt')
-    mapc2p0, mx_edge, xp_edge = make_mapc2p(path_celledges0)
+    mapc2p0_pa, mx_edge, xp_edge = make_mapc2p(path_celledges0)
+
+    def mapc2p0(xc):
+        polarangle = mapc2p0_pa(xc)
+        xp = polarangle * LAT2METER / 1e3  # convert to km
+        return xp
 
 if 0:
     fname = '_output/fgmax.txt'
@@ -140,6 +145,7 @@ def setplot(plotdata=None):
     if outdir0 is not None:
         plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
         #plotitem.show = False
+        print('+++ using ', outdir0)
         plotitem.outdir = outdir0
         plotitem.plot_var = geoplot.surface
         plotitem.color = 'k'

@@ -9,6 +9,8 @@ that will be read in by the Fortran code.
 import os, sys
 import numpy as np
 from clawpack.geoclaw.nonuniform_grid_tools import make_mapc2p
+from clawpack.geoclaw.data import Rearth
+deg2m = Rearth*np.pi/180
 
 
 # Read in nonuniform computational cell edges
@@ -269,11 +271,17 @@ def setrun(claw_pkg='geoclaw'):
     # to corresponding xc as follows:
 
     if 1:
-        xp_gauges = [24, 28.37, 28.38]
-        for k,xp_g in enumerate(xp_gauges):
-            gaugeno = int(xp_g*1000)
+        rm_shore = 3151357.57
+        rm_gauges_toshore = range(-200, 2301, 100)
+        gaugenos = [10000 + r for r in rm_gauges_toshore]
+        rm_gauges = rm_shore + np.array(rm_gauges_toshore, dtype=float)
+        lat_gauges = rm_gauges / deg2m
+        
+        for gaugeno,xp_g in zip(gaugenos, lat_gauges):
             # compute computational point xc_g that maps to xp_g:
             ii = np.where(xp_edge < xp_g)[0][-1]
+            if ii==len(xp_edge)-1:
+                continue
             xp_frac = (xp_g - xp_edge[ii])/(xp_edge[ii+1] - xp_edge[ii])
             xc_g = (ii + xp_frac)/float(mx)
             print('gaugeno = %i: physical location xp_g = %g maps to xc_g = %.12f' \

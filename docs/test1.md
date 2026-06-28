@@ -122,7 +122,7 @@ test in 2D.  We then refined this grid everywhere by factors of 2, 5, and 10
 to get finer grids with onshore resolutions of 5, 2, and 1 meter, as well as
 coarsening by a factor of 3 for an onshore resolution of 30 m (1").
 
-The animation below shows 10m resolution in blue compared with 1m
+The animation below shows 10m resolution in magenta compared with 1m
 resolution in black.
 
 :::{tip}
@@ -143,23 +143,25 @@ if you want to pause it or step through frame by frame.
 
 Some static views of the solution are shown below
 at different times, comparing
-5m resolution (blue) with 1m resolution (black):
+10m resolution (blue) with 5m resolution (black):
 
 
-:::{figure} ../CSZ_Westport/1d_radial/_plots_5mG_10m/frame0045fig1.png
+:::{figure} ../CSZ_Westport/1d_radial/1Dtransect_45min.png
 :width: 600
 :::
 
-:::{figure} ../CSZ_Westport/1d_radial/_plots_5mG_10m/frame0046fig1.png
+:::{figure} ../CSZ_Westport/1d_radial/1Dtransect_46min.png
 :width: 600
 :::
 
-:::{figure} ../CSZ_Westport/1d_radial/_plots_5mG_10m/frame0047fig1.png
+:::{figure} ../CSZ_Westport/1d_radial/1Dtransect_47min.png
 :width: 600
 :::
 
+:::{figure} ../CSZ_Westport/1d_radial/1Dtransect_48min.png
+:width: 600
+:::
 
-Additional plots and animations can be viewed at LINK.
 
 ### Gauge plots in 1D
 
@@ -184,7 +186,9 @@ Note that the agreement is better offshore than onshore, and the depth
 agrees better than the flow speed, which is not surprising.
 
 More work is needed to properly test convergence and fully understand
-some of the differences seen above.
+some of the differences seen above.  It would also be good to compare
+against 1D solution generated with other software, if others have
+implemented the axial source terms.
 
 The plots below
 show that the 10 m resolution 1D solution also agrees well with the
@@ -267,6 +271,11 @@ shown.
 
 ### Comparison on the transect
 
+Here we compare the 1D solution with 10 m resolution to a the 2D
+solution extracted on the transect (using bilinear interpolation from
+the cell averages) when a 1/3" grid is used on shore (which has
+resolution approxmately 10 m in latitude).
+
 :::{figure} ../CSZ_Westport/2Dtransect_45min.png
 :width: 600
 :::
@@ -288,7 +297,7 @@ shown.
 Synthetic gauges were placed at the shoreline and at points in the offshore
 and onshore direction spaced at 200 m increments.
 
-Comparsion to the 1D gauge at the shore and 400 m offshore / onshore
+Comparison to the 1D gauge at the shore and 400 m offshore / onshore
 are shown below.  Here we compare the 10 m resolution 1D result with
 2D results having 1/3" resolution onshore, which is comparable resolution.
 
@@ -312,6 +321,7 @@ are shown below.  Here we compare the 10 m resolution 1D result with
 - Perform better resolution / convergence studies.
 - Try different amplitudes for earthquake deformation.
 - Vary Manning coefficient (in 1D and 2D) to see variation.
+- Try dispersive / nonhydrostatic solvers.
 
 ## Farfield event
 
