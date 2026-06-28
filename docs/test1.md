@@ -1,6 +1,11 @@
 (test1)=
 # Designing a test problem with axial symmetry
 
+:::{warning}
+This is Work in Progress to illustrate how such a problem might
+be designed and used.  Many things could be improved...
+:::
+
 The goal is to design test problems for tsunami benchmarking based on:
 
 - A 1D topography profile
@@ -23,6 +28,21 @@ model equations (e.g. nonlinear shallow water equations) provided that the
 1D equations include a source term for the axial symmetry. (And assuming the
 2D code is solving in spherical longitude-latitude coordinates.)
 
+## Verification vs. validation
+
+Note that this test would be used as part of the verification process
+("Are we solving the equations right?")
+not validation ("Are we solving the right equations?").  It could take the
+place (or supplement) simple problems for which an analytic solution of
+the shallow water equations is known (e.g. a solitary wave on a linear
+beach) in order to provide a more realistic test that the equations
+being used are being solved as claimed with sufficient resolution.
+
+Other tests are needed for
+validation (to check if the shallow water equations are adequate to
+match reality, comparing against observations from historical
+events and/or wave tank experiments).
+See e.g. [](https://en.wikipedia.org/wiki/Software_verification_and_validation).
 
 ## Sample 1D topography
 
@@ -47,14 +67,15 @@ shoreline at 2518.589 km, shown below:
 :::
 
 We can define an "axial latitude" based on degrees from the equator relative
-to an axis of revolution through the sphere.  This would simply be the 
+to an axis of revolution through the sphere.  This would simply be the
 latitude if the axis of revolution is chosen to go through the earth's
 poles, but we choose some other axis so that the 2D solution on the
 resulting domain does not simply reduce to a being constant in longitude.  
 
-One degree of latitude is $\approx 111$ km, so in axial latitude
-coordinates the shoreline is approximately 22 degrees south of the axial
-pole (the point where the axis of symmetry passes through the earth).
+We can define an arbitrary axis of revolution through the sphere to
+revolve this topography. Relative to this axis, the shoreline will be
+at a polar angle of roughly 22 degrees, since one degree of latitude
+is $\approx 111$ km.
 Solving the 1D equations with axial symmetry is accomplished by adding a
 source term involving the axial latitude. The spherical source term is
 described, for example, in Section 5 of [these
@@ -69,12 +90,22 @@ synthetic source is specified based on a positive Gaussian centered
 roughly at the trench and a broader and smaller amplitude  negative
 Gaussian closer to shore that results in some coastal subsidence.
 
-The function used was based on examining transects of other sources such as
-the L1 source along the same transect used to define the topography.
-For the initial test the amplitude was set to be
-only about half the amplitude of L1 to give less inundation.  Parameters
-can easily be adjusted to change the amplitude, Gaussian widths, amount of
-coastal subsidence, etc.
+The function used was based on examining transects of other sources
+along the same transect used to define the topography.  The figure
+below shows the L1 source and the "ASCE SIFT Region 3" source
+developed by Yong Wei based on the ASCE 7-22 offshore
+amplitudes with 2475-year return period.
+The curve shown in red is a similar one based on two Gaussians, so
+that it can easily be adjusted to change the amplitude,
+Gaussian widths, amount of coastal subsidence, etc.
+The Gaussian source in the figure has peak amplitude 10 m but the
+one used for the tests show below was scaled down to 5 m
+to give less inundation.
+
+:::{figure} ../CSZ_Westport/dz_3sources.png
+:width: 600
+:::
+
 
 ### 1D convergence
 
@@ -91,8 +122,14 @@ test in 2D.  We then refined this grid everywhere by factors of 2, 5, and 10
 to get finer grids with onshore resolutions of 5, 2, and 1 meter, as well as
 coarsening by a factor of 3 for an onshore resolution of 30 m (1").
 
-The plots below show a few comparisons of the solution at different
-resolutions.  
+The animation below shows 10m resolution in blue compared with 1m
+resolution in black.
+
+:::{tip}
+Click below to bring up the animation, and once it is playing,
+right click to "Show All Controls"
+if you want to pause it or step through frame by frame.
+:::
 
 :::{dropdown} Animation comparing 10m with 1m resolution
 :close:
@@ -102,7 +139,10 @@ resolutions.
 ```
 :::
 
-Some static views of the solution at different times, comparing 
+
+
+Some static views of the solution are shown below
+at different times, comparing
 5m resolution (blue) with 1m resolution (black):
 
 
@@ -119,16 +159,42 @@ Some static views of the solution at different times, comparing
 :::
 
 
+Additional plots and animations can be viewed at LINK.
+
+### Gauge plots in 1D
 
 We can also place synthetic gauges at particular points and observe the
 convergence in the gauge results.  Here are results at three gauges, one of
-which is at the shoreline and the other two are 400 m offshore / onshore.
+which is at the shoreline and the other two are at 400 m offshore
+and onshore respectively.
 
+:::{figure} ../CSZ_Westport/gauge1_1D.png
+:width: 600
+:::
+
+:::{figure} ../CSZ_Westport/gauge3_1D.png
+:width: 600
+:::
+
+:::{figure} ../CSZ_Westport/gauge5_1D.png
+:width: 600
+:::
+
+Note that the agreement is better offshore than onshore, and the depth
+agrees better than the flow speed, which is not surprising.
+
+More work is needed to properly test convergence and fully understand
+some of the differences seen above.
+
+The plots below
+show that the 10 m resolution 1D solution also agrees well with the
+2D solution on a 1/3" grid (comprable resolution).
 
 ## Axis of revolution and 2D domain
 
 For this test, the axis of revolution was chosen to pass through the earth at
-longitude 50, latitude 40 (the axial pole).  
+longitude 50, latitude 40 (the axial pole).
+
 The plot below shows the resulting "ocean" when plotted in standard
 longitude-latitude coordinates on the earth (it would look circular if
 plotted on the sphere).  This plot also shows several great circle transects
@@ -160,10 +226,61 @@ rotated 1D topography at different resolutions:
 - 1/3" covering the nearshore and onshore at the coastal location.
 
 
-A few plots of the solution zoomed in near the shore:
+Two plots of the 2D solution zoomed in near the shore are shown below.
+Gauge locations are shown as black dots, and lie along the transect
+shown in red in the figure above at 200 m spatial increment.
+Adaptive mesh refinement is
+used for the computation with 1/3" grids covering most of the region
+shown.
 
-:::{figure} ../CSZ_Westport/2d_test1/_plots_6levels/
+:::{figure} ../CSZ_Westport/2d_test1/_plots_6levels/frame0005fig7.png
 :width: 400
+:::
+
+:::{figure} ../CSZ_Westport/2d_test1/_plots_6levels/frame0010fig7.png
+:width: 400
+:::
+
+:::{dropdown} Animation of 2D solution on full domain
+:close:
+```{figure} ../CSZ_Westport/2d_test1/_plots_6levels/movie_fig0.mp4
+:width: 400px
+:align: center
+```
+:::
+
+:::{dropdown} Animation of 2D solution around continental shelf
+:close:
+```{figure} ../CSZ_Westport/2d_test1/_plots_6levels/movie_fig6.mp4
+:width: 400px
+:align: center
+```
+:::
+
+:::{dropdown} Animation of 2D solution near shore
+:close:
+```{figure} ../CSZ_Westport/2d_test1/_plots_6levels/movie_fig7.mp4
+:width: 400px
+:align: center
+```
+:::
+
+### Comparison on the transect
+
+:::{figure} ../CSZ_Westport/2Dtransect_45min.png
+:width: 600
+:::
+
+:::{figure} ../CSZ_Westport/2Dtransect_46min.png
+:width: 600
+:::
+
+:::{figure} ../CSZ_Westport/2Dtransect_47min.png
+:width: 600
+:::
+
+:::{figure} ../CSZ_Westport/2Dtransect_48min.png
+:width: 600
 :::
 
 ### Gauge comparisons
@@ -171,6 +288,37 @@ A few plots of the solution zoomed in near the shore:
 Synthetic gauges were placed at the shoreline and at points in the offshore
 and onshore direction spaced at 200 m increments.
 
-Comparsion to the 1D gauge at the shore:
+Comparsion to the 1D gauge at the shore and 400 m offshore / onshore
+are shown below.  Here we compare the 10 m resolution 1D result with
+2D results having 1/3" resolution onshore, which is comparable resolution.
 
 
+:::{figure} ../CSZ_Westport/gauge1_2D.png
+:width: 600
+:::
+
+:::{figure} ../CSZ_Westport/gauge3_2D.png
+:width: 600
+:::
+
+:::{figure} ../CSZ_Westport/gauge5_2D.png
+:width: 600
+:::
+
+
+### Next steps
+
+- Choose better transect(s) for sampling the data?
+- Perform better resolution / convergence studies.
+- Try different amplitudes for earthquake deformation.
+- Vary Manning coefficient (in 1D and 2D) to see variation.
+
+## Farfield event
+
+Another test problem could be produced by taking
+a 1D transect of topography crossing the ocean from a subduction zone
+to a distant shore and again comparing 1D and axially symmetric 2D
+solutions.
+
+Synthetic DART gauges could be placed in the deep ocean in addition
+to looking at onshore inundation on the distant coastline.

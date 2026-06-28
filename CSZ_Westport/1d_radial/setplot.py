@@ -4,43 +4,57 @@ import os, sys
 import numpy
 from clawpack.visclaw import geoplot
 from clawpack.geoclaw.nonuniform_grid_tools import make_mapc2p
+from clawpack.geoclaw.data import Rearth, LAT2METER
 
 fname_celledges = os.path.abspath('celledges_10m.txt')
 
 # reference solution:
 res0 = '1m'
-outdir0 = f'_output_5mG_{res0}'
-#outdir0 = None
+#outdir0 = f'_output_5mG_{res0}'
+outdir0 = None
+#outdir0 = 'xxxx'
 
 
 if outdir0 is not None:
     path_celledges0 = os.path.abspath(f'celledges_{res0}.txt')
     mapc2p0, mx_edge, xp_edge = make_mapc2p(path_celledges0)
 
-fname = '_output/fgmax.txt'
-try:
-    d = numpy.loadtxt(fname)
-    xmax = d[:,0]
-    Bmax = d[:,1]
-    hmax = d[:,2]
-    etamax = numpy.where(hmax>1e-3, hmax+Bmax, numpy.nan)
-    jmax = numpy.where(hmax>1e-3)[0].max()
-    print("run-in = %8.2f m,  run-up = %8.2f m" % (xmax[jmax],etamax[jmax]))
-    print('Loaded hmax from ',fname)
-except:
+if 0:
+    fname = '_output/fgmax.txt'
+    try:
+        d = numpy.loadtxt(fname)
+        xmax = d[:,0]
+        Bmax = d[:,1]
+        hmax = d[:,2]
+        etamax = numpy.where(hmax>1e-3, hmax+Bmax, numpy.nan)
+        jmax = numpy.where(hmax>1e-3)[0].max()
+        print("run-in = %8.2f m,  run-up = %8.2f m" % (xmax[jmax],etamax[jmax]))
+        print('Loaded hmax from ',fname)
+    except:
+        xmax = None
+        print('Failed to load ',fname)
+else:
     xmax = None
-    print('Failed to load ',fname)
 
 #xmax = None # to suppress plotting max elevation as red curve
 
 xlimits = [20, 22.68]
 
-def setplot(plotdata):
+def setplot(plotdata=None):
+
+    if plotdata is None:
+        from clawpack.visclaw.data import ClawPlotData
+        plotdata = ClawPlotData()
 
     plotdata.clearfigures()
 
     fname1 = os.path.join(plotdata.outdir, fname_celledges)
-    mapc2p1, mx_edge, xp_edge = make_mapc2p(fname1)
+    mapc2p1_pa, mx_edge, xp_edge = make_mapc2p(fname1)
+
+    def mapc2p1(xc):
+        polarangle = mapc2p1_pa(xc)
+        xp = polarangle * LAT2METER / 1e3  # convert to km
+        return xp
 
 
     def fix_layout(current_data):
@@ -99,17 +113,57 @@ def setplot(plotdata):
     plotitem.MappedGrid = True
     plotitem.mapc2p = mapc2p1
 
-
-    #----------
+    #-------------
 
     plotfigure = plotdata.new_plotfigure(name='shore', figno=1)
-    plotfigure.figsize = (8,6)
+    plotfigure.figsize = (10,5)
     #plotfigure.show = False
 
 
     plotaxes = plotfigure.new_plotaxes()
+    #plotaxes.xlimits = [22.66, 22.685]  # degrees
+    plotaxes.xlimits = [2518, 2521]  # km
+    plotaxes.ylimits = [-5,15]
+    plotaxes.ylabel = 'meters'
+    plotaxes.title = 'Zoom near shore at time h:m:s'
+    plotaxes.grid = True
+    #plotaxes.afteraxes = add_etamax
+    plotaxes.xlabel = 'km from axial pole'
+
+    plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
+    plotitem.plot_var = geoplot.surface
+    plotitem.color = 'b'
+    plotitem.MappedGrid = True
+    plotitem.mapc2p = mapc2p1
+
+    # reference solution:
+    if outdir0 is not None:
+        plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
+        #plotitem.show = False
+        plotitem.outdir = outdir0
+        plotitem.plot_var = geoplot.surface
+        plotitem.color = 'k'
+        #plotitem.kwargs = {'linewidth':0.9}
+        plotitem.MappedGrid = True
+        plotitem.mapc2p = mapc2p0
+
+    plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
+    plotitem.plot_var = geoplot.topo
+    plotitem.color = 'g'
+    plotitem.MappedGrid = True
+    plotitem.mapc2p = mapc2p1
+
+    #----------
+
+    plotfigure = plotdata.new_plotfigure(name='shore eta,s', figno=2)
+    plotfigure.figsize = (8,6)
+    plotfigure.show = False
+
+
+    plotaxes = plotfigure.new_plotaxes()
     plotaxes.axescmd = 'subplot(211)'
-    plotaxes.xlimits = [22.66, 22.685]
+    #plotaxes.xlimits = [22.66, 22.685]  # degrees
+    plotaxes.xlimits = [2518, 2521]  # km
     plotaxes.ylimits = [-5,15]
     plotaxes.ylabel = 'meters'
     plotaxes.title = 'Zoom near shore at time h:m:s'
@@ -150,7 +204,8 @@ def setplot(plotdata):
     plotaxes = plotfigure.new_plotaxes()
     #plotaxes.show = False
     plotaxes.axescmd = 'subplot(212)'
-    plotaxes.xlimits = [22.66, 22.685]
+    #plotaxes.xlimits = [22.66, 22.685]  # degrees
+    plotaxes.xlimits = [2518, 2521]  # km
     plotaxes.ylimits = [0,14]
     plotaxes.ylabel = 'meters / sec'
     plotaxes.title = 'Speed around shore at time h:m:s'
@@ -173,6 +228,7 @@ def setplot(plotdata):
         #plotitem.kwargs = {'linewidth':0.9}
         plotitem.MappedGrid = True
         plotitem.mapc2p = mapc2p0
+
 
 
     #-------------
