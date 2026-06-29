@@ -323,6 +323,13 @@ are shown below.  Here we compare the 10 m resolution 1D result with
 - Vary Manning coefficient (in 1D and 2D) to see variation.
 - Try dispersive / nonhydrostatic solvers.
 
+### Code and data
+
+The code used to generate the figures and animations shown here is in
+the Github repository https://github.com/rjleveque/radial_benchmarks,
+but it has not been cleaned up or well documented
+and it is not yet intended for others to try to use.
+
 ## Farfield event
 
 Another test problem could be produced by taking
