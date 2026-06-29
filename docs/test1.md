@@ -52,11 +52,18 @@ obtained by sampling a great circle transect of
 real topography from the deep ocean to a coastal location just south of
 Westport, WA.  The best choice of topography is open to discussion.
 
+:::{figure} ../CSZ_Westport/gctransect1.png
+:width: 600
+:::
+
 The offshore topography was sampled from the etopo 2022 15-arcsecond (15") data,
 while the nearshore and onshore topography was sampled from the NOAA CUDEM
-1/9" data. This data was extended by constant values offshore and
-onshore to obtain 1D data defined from 0 roughly 2600 km in 1D, with the
-shoreline at 2518.589 km, shown below:
+1/9" data.
+
+The transect shown above is about 300 km long, but this
+data was extended by a constant depth to place it about 2200 km away
+from the axial pole for the axisymmetric problem, as described below.
+As a result the shoreline is at 2518.589 km, as seen in the plots below:
 
 :::{figure} ../CSZ_Westport/topo1.png
 :width: 600
