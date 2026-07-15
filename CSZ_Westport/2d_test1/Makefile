@@ -23,6 +23,8 @@ PLOTDIR = _plots                    # Directory for plots
 
 # Compiler flags can be specified here or set as an environment variable
 FFLAGS ?= 
+FFLAGS += -DNETCDF $(shell nf-config --fflags)
+LFLAGS += $(FFLAGS) $(shell nf-config --flibs) $(shell nc-config --libs)
 
 # ---------------------------------
 # package sources for this program:

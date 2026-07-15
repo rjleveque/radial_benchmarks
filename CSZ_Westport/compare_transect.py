@@ -39,7 +39,8 @@ d2 = 2525e3
 theta0 = 210.
 dtheta = 0.02
 
-for theta in linspace(theta0-dtheta, theta0+dtheta, 9):
+#for theta in linspace(theta0-dtheta, theta0+dtheta, 9):
+for theta in [theta0]:
     xhat1, yhat1 = mapper.latlong(d1,theta,y0,Rearth)
     xhat1 += x0
     xhat2, yhat2 = mapper.latlong(d2,theta,y0,Rearth)
@@ -75,6 +76,11 @@ xhat2, yhat2 = mapper.latlong(d2,theta,y0,Rearth)
 xhat2 += x0
 
 xtrans, ytrans = gctransect(xhat1,yhat1, xhat2, yhat2, 1000, coords='E')
+if 0:
+    transdata = vstack((xtrans,ytrans)).T
+    fname ='xy_transect.txt' 
+    savetxt(fname, transdata)
+    print('Created ',fname)
 d = haversine(xtrans, ytrans, x0, y0)
 method = 'linear'
 h = gridtools.grid_output_2d(framesoln, 0, xtrans, ytrans, method=method)

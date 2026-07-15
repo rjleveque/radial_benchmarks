@@ -174,7 +174,7 @@ def setplot(plotdata):
     plotitem.pcolor_cmax = 5.0
     plotitem.add_colorbar = True
     plotitem.colorbar_kwargs = {'extend':'both'}
-    plotitem.amr_celledges_show = [0]
+    plotitem.amr_celledges_show = [0,0,0,0,0,1]
     plotitem.amr_patchedges_show = [0,0,0,0]
 
     # Land

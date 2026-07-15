@@ -379,16 +379,23 @@ def setrun(claw_pkg='geoclaw'):
     topofiles = rundata.topo_data.topofiles
     # for topography, append lines of the form
     #    [topotype, fname]
-    topofiles.append([3, 'topo15s.asc'])
-    topofiles.append([3, 'topo3s.asc'])
-    topofiles.append([3, 'topo13s.asc'])
+    if 0:
+        topofiles.append([3, 'topo15s.asc'])
+        topofiles.append([3, 'topo3s.asc'])
+        topofiles.append([3, 'topo13s.asc'])
+    else:
+        datadir = '../input_data'
+        topofiles.append([4, f'{datadir}/topo15s.nc'])
+        topofiles.append([4, f'{datadir}/topo3s.nc'])
+        topofiles.append([4, f'{datadir}/topo13s.nc'])
 
     # == setdtopo.data values ==
     rundata.dtopo_data.dtopofiles = []
     dtopofiles = rundata.dtopo_data.dtopofiles
     # for moving topography, append lines of the form :
     #   [topotype, fname]
-    dtopofiles.append([3, 'gaussian5m_dtopo_15s.dtt3'])
+    #dtopofiles.append([3, 'gaussian5m_dtopo_15s.dtt3'])
+    dtopofiles.append([4, f'{datadir}/gaussian5m_dtopo_15s.nc'])
     rundata.dtopo_data.dt_max_dtopo = 0.4
 
 
