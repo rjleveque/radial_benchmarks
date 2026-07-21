@@ -8,6 +8,7 @@ function setplot is called to set the plot parameters.
 """ 
 
 import numpy
+from clawpack.visclaw import colormaps
 
 #--------------------------
 def setplot(plotdata=None):
@@ -49,6 +50,11 @@ def setplot(plotdata=None):
              gaugenos=gaugenos, format_string='ko', add_labels=True)
     
 
+    land_cmap = colormaps.make_colormap({ 0.0:[0.1,0.4,0.0],
+                                         0.25:[0.0,1.0,0.0],
+                                          0.5:[0.8,1.0,0.5],
+                                          1.0:[0.8,0.5,0.2]}) 
+
     #-----------------------------------------
     # Figure for pcolor plot
     #-----------------------------------------
@@ -67,30 +73,30 @@ def setplot(plotdata=None):
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     plotitem.plot_var = geoplot.surface_or_depth
     plotitem.pcolor_cmap = geoplot.tsunami_colormap
-    plotitem.pcolor_cmin = -0.01
-    plotitem.pcolor_cmax = 0.01
+    plotitem.pcolor_cmin = -0.005
+    plotitem.pcolor_cmax = 0.005
     plotitem.add_colorbar = True
-    plotitem.amr_celledges_show = [0,0,0]
+    plotitem.amr_celledges_show = [1,0,0]
     plotitem.amr_patchedges_show = [0,1]
 
     # Land
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     plotitem.plot_var = geoplot.land
-    plotitem.pcolor_cmap = geoplot.land_colors
+    plotitem.pcolor_cmap = land_cmap  #geoplot.land_colors
     plotitem.pcolor_cmin = 0.0
     plotitem.pcolor_cmax = 2.0
     plotitem.add_colorbar = False
-    plotitem.amr_celledges_show = [0,0,0]
+    plotitem.amr_celledges_show = [1,0,0]
     plotitem.amr_patchedges_show = [0,1]
 
-    # Add contour lines of bathymetry:
+    # Add contour lines of eta:
     plotitem = plotaxes.new_plotitem(plot_type='2d_contour')
-    plotitem.show = False
-    plotitem.plot_var = geoplot.topo
+    #plotitem.show = False
+    plotitem.plot_var = -1
     from numpy import arange, linspace
-    plotitem.contour_levels = [10] #linspace(-.1, 0.5, 20)
-    plotitem.amr_contour_colors = ['k']  # color on each level
-    plotitem.kwargs = {'linestyles':'solid'}
+    plotitem.contour_levels = arange(0.005, 0.05, 0.005)
+    plotitem.amr_contour_colors = ['yellow']  # color on each level
+    plotitem.kwargs = {'linestyles':'solid', 'linewidths':0.8}
     plotitem.amr_contour_show = [0,1]  
     plotitem.celledges_show = 0
     plotitem.patchedges_show = 0
