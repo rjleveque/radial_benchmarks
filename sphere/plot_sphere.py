@@ -1,8 +1,10 @@
 import pyvista as pv
 import numpy as np
+from clawpack.visclaw import colormaps
+
 
 # 1. Create a high-resolution sphere mesh
-sphere = pv.Sphere(radius=1.0, theta_resolution=100, phi_resolution=100)
+sphere = pv.Sphere(radius=1.0, theta_resolution=200, phi_resolution=200)
 
 # 2. Extract Cartesian coordinates of the points
 x, y, z = sphere.points[:, 0], sphere.points[:, 1], sphere.points[:, 2]
@@ -48,7 +50,7 @@ if 0:
 
 else:
     yhat0 = 60 * np.pi/180
-    B1d = lambda yhat: np.where(abs(yhat - yhat0) < 10*np.pi/180, -1, 1)
+    B1d = lambda yhat: np.where(abs(yhat - yhat0) < 10*np.pi/180, 1, -1)
 
     xpole = 0
     ypole = 30
@@ -64,6 +66,8 @@ sphere.point_data["custom_function"] = scalars
 
 if 1:
     plotter = pv.Plotter()
-    plotter.add_mesh(sphere, scalars="custom_function", cmap="viridis")
+    plotter.add_mesh(sphere, scalars="custom_function", 
+                     cmap=colormaps.yellow_red_blue, clim=(-1,1))
+                     #cmap="viridis")
                      #show_edges=True)
-    plotter.show()
+    plotter.show(window_size=(1500,1500))
