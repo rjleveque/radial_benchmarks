@@ -10,6 +10,8 @@ function setplot is called to set the plot parameters.
 import numpy
 from clawpack.visclaw import colormaps
 
+alpha = 0.1
+
 #--------------------------
 def setplot(plotdata=None):
 #--------------------------
@@ -103,7 +105,51 @@ def setplot(plotdata=None):
     plotitem.show = True
 
     #-----------------------------------------
-    # Figure for scatter plots (FIX)
+    # Figure for transect plots
+    #-----------------------------------------
+
+    plotfigure = plotdata.new_plotfigure(name='transect', figno=9)
+    plotfigure.figsize = (10,6)
+    plotaxes = plotfigure.new_plotaxes('pcolor')
+
+    def plot_xsec(current_data):
+        from pylab import plot,legend,xlabel,sqrt,grid,xlim,ylim, \
+                    xticks,ylabel,where,nan
+        from numpy import cos,pi,linspace,zeros,ones,hstack,sin
+        from clawpack.pyclaw import Solution
+        from clawpack.visclaw import gridtools
+        pd = current_data.plotdata
+        frameno = current_data.frameno
+        framesoln = Solution(frameno, path=pd.outdir, file_format=pd.format)
+        method = 'linear'
+        xhat = linspace(-5, 40, 1000)
+        for offset in [0,0.3,0.5]:
+            yhat = offset*ones(xhat.shape)
+            xout = cos(alpha)*xhat - sin(alpha)*yhat
+            yout = sin(alpha)*xhat + cos(alpha)*yhat
+            h_out = gridtools.grid_output_2d(framesoln, 0, xout, yout,
+                                             method=method)
+            eta_out = gridtools.grid_output_2d(framesoln, -1, xout, yout,
+                                               method=method)
+            B_out = eta_out - h_out
+            eta_out = where(h_out > 1e-3, eta_out, nan)
+            plot(xout, B_out, 'g')
+            plot(xout, eta_out, 'b', label=f'along yhat = {offset:.3f}')
+
+        #legend(framealpha=1)
+        xticks(rotation=20)
+        xlabel('x (meters)')
+        ylabel('y (meters)')
+        xlim(-5,10)
+        ylim(-0.05, 0.05)
+        grid(True)
+
+    plotaxes.afteraxes = plot_xsec
+    plotaxes.title = 'Surface on three parallel transects'
+
+
+    #-----------------------------------------
+    # Figure for scatter plots
     #-----------------------------------------
     plotfigure = plotdata.new_plotfigure(name='scatter', figno=10)
 
@@ -120,7 +166,6 @@ def setplot(plotdata=None):
     def eta_vs_xhat(current_data):
         # Return radius of each grid cell and p value in the cell
         from pylab import sqrt,sin,cos,where,nan
-        alpha = 0.1
         x = current_data.x
         y = current_data.y
         xhat = cos(alpha)*x + sin(alpha)*y
@@ -135,7 +180,6 @@ def setplot(plotdata=None):
     def B_vs_xhat(current_data):
         # Return radius of each grid cell and p value in the cell
         from pylab import sqrt,sin,cos,where,nan
-        alpha = 0.1
         x = current_data.x
         y = current_data.y
         xhat = cos(alpha)*x + sin(alpha)*y
