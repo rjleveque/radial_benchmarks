@@ -1,0 +1,44 @@
+
+from pylab import *
+
+
+from params import grav, D0, L, eta0
+
+print(f'Parameters: D0 = {D0}, L = {L}, eta0 = {eta0}')
+
+omega = sqrt(8.*grav*D0 / L**2)
+A = ((D0 + eta0)**2 - D0**2) / ((D0 + eta0)**2 + D0**2)
+print(f'A = {A}, omega = {omega}')
+
+# parabolic bowl with depth D0 at center, B=0 at radius L:
+Bfcn = lambda x,y: -D0 * (1 - (x**2 + y**2)/L**2)
+
+def qtrue(x,y,t):
+    denom = 1 - A*cos(omega*t)
+    B = Bfcn(x,y)
+    eta = D0 * (sqrt(1-A**2)/denom - 1 \
+          - (x**2 + y**2)/L**2 * ((1-A**2)/(1-A*cos(omega*t))**2 - 1))
+    eta = maximum(B, eta)
+    u = 1/denom * (0.5*omega*x*A*sin(omega*t))
+    v = 1/denom * (0.5*omega*y*A*sin(omega*t))
+    h = eta - B
+    return h,u,v,eta
+    
+
+def plot_eta(t):
+    
+    x = linspace(-(L+2),L+2, 201)
+    y = linspace(-(L+2),L+2, 201)
+    X,Y = meshgrid(x,y,indexing='ij')
+    B = Bfcn(X,Y)
+    h,u,v,eta = qtrue(X,Y,t)
+    #fig,axs = subplots(1,2,figsize=(10,6))
+    figure(301)
+    #clf()
+    plot(x, eta[:,100], 'b')
+    plot(x, B[:,100], 'g')
+    grid(True)
+    axis('scaled')
+    xlabel('x (m)')
+    ylabel('elevation (m)')
+
