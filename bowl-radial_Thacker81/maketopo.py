@@ -15,10 +15,10 @@ def maketopo():
     """
     nx = 200
     ny = 200
-    xlower = -4.0
-    xupper = 4.0
-    ylower = -4.0
-    yupper = 4.0
+    xlower = -240.0
+    xupper = 240.0
+    ylower = -240.0
+    yupper = 240.0
     outfile= "bowl.asc"
 
     topography = Topography(topo_func=topo)

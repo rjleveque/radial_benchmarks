@@ -96,15 +96,15 @@ def setplot(plotdata=None):
 
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes('pcolor')
-    plotaxes.title = 'Surface'
+    plotaxes.title = 'Water depth'
     plotaxes.scaled = True
 
     # Water
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
-    plotitem.plot_var = geoplot.surface_or_depth
+    plotitem.plot_var = geoplot.depth  #geoplot.surface_or_depth
     plotitem.pcolor_cmap = geoplot.tsunami_colormap
-    plotitem.pcolor_cmin = -1
-    plotitem.pcolor_cmax = 1
+    plotitem.pcolor_cmin = 0
+    plotitem.pcolor_cmax = 8
     plotitem.add_colorbar = True
     plotitem.amr_celledges_show = [0,0,0]
     plotitem.amr_patchedges_show = [0]
@@ -126,11 +126,13 @@ def setplot(plotdata=None):
         h_true, u_true, v_true, eta_true = qtrue(rout, zeros(rout.shape), t)
         jshore = where(h_true > 0)[0].max()
         rshore = rout[jshore]
+        print(f'rshore = {rshore:.3f}')
         theta = linspace(0, 2*pi, 1000)
         xshore = rshore * cos(theta)
         yshore = rshore * sin(theta)
-        plot(xshore, yshore, 'k', linewidth=0.6, label='true shoreline')
-        legend(loc='upper left', fontsize=9)
+        plot(xshore, yshore, 'yellow', linewidth=1.6, label='true shoreline')
+        legend(loc='upper left', fontsize=9, labelcolor='yellow',
+                facecolor='g')
 
     plotaxes.afteraxes = plot_shore
 
@@ -151,7 +153,7 @@ def setplot(plotdata=None):
     #-----------------------------------------
 
     plotfigure = plotdata.new_plotfigure(name='transect', figno=9)
-    plotfigure.figsize = (10,6)
+    plotfigure.figsize = (12,5)
     plotaxes = plotfigure.new_plotaxes('pcolor')
 
     def plot_xsec(current_data):
@@ -191,7 +193,7 @@ def setplot(plotdata=None):
         #xticks(rotation=20)
         xlabel('x (meters)')
         ylabel('elevation (meters)')
-        xlim(-4,4)
+        xlim(-240,240)
         ylim(-2.5,2.5)
         grid(True)
 

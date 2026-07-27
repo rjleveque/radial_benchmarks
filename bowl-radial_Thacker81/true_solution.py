@@ -23,12 +23,12 @@ def qtrue(x,y,t):
     v = 1/denom * (0.5*omega*y*A*sin(omega*t))
     h = eta - B
     return h,u,v,eta
-    
+
 
 def plot_eta(t):
-    
-    x = linspace(-(L+2),L+2, 201)
-    y = linspace(-(L+2),L+2, 201)
+
+    x = linspace(-1.2*L, 1.2*L, 201)
+    y = linspace(-1.2*L, 1.2*L, 201)
     X,Y = meshgrid(x,y,indexing='ij')
     B = Bfcn(X,Y)
     h,u,v,eta = qtrue(X,Y,t)
@@ -38,7 +38,17 @@ def plot_eta(t):
     plot(x, eta[:,100], 'b')
     plot(x, B[:,100], 'g')
     grid(True)
-    axis('scaled')
+    #axis('scaled')
     xlabel('x (m)')
     ylabel('elevation (m)')
+    title(f'Surface eta at time {t:.2f} seconds')
 
+    figure(302)
+    #clf()
+    plot(x, u[:,100], 'b')
+    #plot(x, B[:,100], 'g')
+    grid(True)
+    #axis('scaled')
+    xlabel('x (m)')
+    ylabel('speed (m/s)')
+    title(f'Radial speed at time {t:.2f} seconds')
