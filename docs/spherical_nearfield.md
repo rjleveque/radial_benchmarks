@@ -1,5 +1,5 @@
-(test1)=
-# Designing a test problem with axial symmetry
+(spherical_nearfield)=
+# A nearfield tsunami test with axial symmetry
 
 :::{warning}
 This is Work in Progress to illustrate how such a problem might
@@ -346,3 +346,7 @@ solutions.
 
 Synthetic DART gauges could be placed in the deep ocean in addition
 to looking at onshore inundation on the distant coastline.
+
+For such a problem it would be better to use [](#annular_ocean) rather
+than the circular ocean shown above.
+

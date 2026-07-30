@@ -19,11 +19,13 @@ project:
     - title: Overview and introduction
       children:
         - file: docs/intro.md
-        - file: docs/test1.md
+        - file: docs/geometries.md
+        - file: docs/spherical_nearfield.md
     - file: docs/biblio.md
 
 site:
   template: book-theme
-  # options:
+  options:
+    hide_toc: false
   #   favicon: favicon.ico
   #   logo: site_logo.png
