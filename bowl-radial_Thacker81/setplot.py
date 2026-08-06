@@ -9,40 +9,8 @@ function setplot is called to set the plot parameters.
 
 from numpy import *
 
-from params import grav, D0, L, eta0
-
+from true_solution import D0, L, eta0, Tperiod
 from true_solution import omega, A, Bfcn, qtrue
-
-if 0:
-    from clawpack.clawutil.data import ClawData
-    probdata = ClawData()
-    probdata.read('setprob.data', force=True)
-    D0 = probdata.D0
-    L = probdata.L
-    eta0 = probdata.eta0
-    print(f'Parameters: D0 = {D0}, L = {L}, eta0 = {eta0}')
-
-    omega = sqrt(8.*grav*D0 / L**2)
-    grav = 9.81
-
-    A = ((D0 + eta0)**2 - D0**2) / ((D0 + eta0)**2 + D0**2)
-
-    # parabolic bowl with depth D0 at center, B=0 at radius L:
-    B = lambda x,y: -D0 * (1 - (x**2 + y**2)/L**2)
-
-    def qtrue(x,y,t):
-        denom = 1 - A*cos(omega*t)
-        eta = D0 * (sqrt(1-A**2)/denom - 1 \
-              - (x**2 + y**2)/L**2 * ((1-A**2)/(1-A*cos(omega*t)**2 - 1)))
-        u = 1/denom * (0.5*omega*x*A*sin(omega*t))
-        v = 1/denom * (0.5*omega*y*A*sin(omega*t))
-        h = eta - B(x,y)
-        return h,u,v,eta
-
-
-    a = 1.
-    sigma = 0.5
-    h0 = 0.1
 
 #--------------------------
 def setplot(plotdata=None):
@@ -288,5 +256,6 @@ def setplot(plotdata=None):
     plotdata.latex_framesperline = 1         # layout of plots
     plotdata.latex_makepdf = False           # also run pdflatex?
     plotdata.parallel = True                 # make multiple frame png's at once
+    plotdata.mp4_movie = True
 
     return plotdata

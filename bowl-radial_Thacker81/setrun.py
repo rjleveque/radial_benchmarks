@@ -9,9 +9,7 @@ that will be read in by the Fortran code.
 import os
 import numpy as np
 
-from params import grav, D0, L, eta0
-omega = np.sqrt(8.*grav*D0 / L**2)
-Tperiod = 2*np.pi/omega
+from true_solution import D0, L, eta0, Tperiod
 
 #------------------------------
 def setrun(claw_pkg='geoclaw'):
@@ -122,8 +120,8 @@ def setrun(claw_pkg='geoclaw'):
 
     if clawdata.output_style == 1:
         # Output nout frames at equally spaced times up to tfinal:
-        clawdata.num_output_times = 18
-        clawdata.tfinal = Tperiod
+        clawdata.num_output_times = 40
+        clawdata.tfinal = 10*Tperiod
         clawdata.output_t0 = True  # output at initial (or restart) time?
 
     elif clawdata.output_style == 2:
@@ -177,7 +175,7 @@ def setrun(claw_pkg='geoclaw'):
     clawdata.cfl_max = 1.0
 
     # Maximum number of time steps to allow between output times:
-    clawdata.steps_max = 5000
+    clawdata.steps_max = 50000
 
 
 

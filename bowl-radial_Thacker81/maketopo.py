@@ -3,10 +3,10 @@
 Module to create topo and qinit data files for this example.
 """
 
-from clawpack.geoclaw.topotools import Topography
 from numpy import *
+from clawpack.geoclaw.topotools import Topography
 
-from params import grav, D0, L, eta0
+from true_solution import D0, L
 
 
 def maketopo():
