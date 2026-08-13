@@ -83,7 +83,8 @@ def setrun(claw_pkg='geoclaw'):
     # ---------------
 
     # Number of equations in the system:
-    clawdata.num_eqn = 3
+    #clawdata.num_eqn = 3 # for SWE
+    clawdata.num_eqn = 5  # for bouss
 
     # Number of auxiliary variables in the aux array (initialized in setaux)
     clawdata.num_aux = 1
@@ -370,7 +371,7 @@ def setgeo(rundata):
     topo_data = rundata.topo_data
     # for topography, append lines of the form
     #    [topotype, fname]
-    topo_data.topofiles.append([3, 'bowl.asc'])
+    topo_data.topofiles.append([3, '../bowl.asc'])
 
     # == setdtopo.data values ==
     dtopo_data = rundata.dtopo_data
@@ -388,6 +389,21 @@ def setgeo(rundata):
     # set rundata.fgout_data.fgout_grids to be a
     # list of objects of class clawpack.geoclaw.fgout_tools.FGoutGrid:
     #rundata.fgout_data.fgout_grids = []
+
+    # To use Boussinesq solver, add bouss_data parameters here
+    # Also make sure to use the correct Makefile pointing to bouss version
+    # and set clawdata.num_eqn = 5
+    
+    from clawpack.geoclaw.data import BoussData
+    rundata.add_data(BoussData(),'bouss_data') 
+    
+    rundata.bouss_data.bouss_equations = 2    # 0=SWE, 1=MS, 2=SGN
+    rundata.bouss_data.bouss_min_level = 1    # coarsest level to apply bouss
+    rundata.bouss_data.bouss_max_level = 10   # finest level to apply bouss
+    rundata.bouss_data.bouss_min_depth = 1.  # depth to switch to SWE
+    rundata.bouss_data.bouss_solver = 3       # 1=GMRES, 2=Pardiso, 3=PETSc
+    rundata.bouss_data.bouss_tstart = 0.      # time to switch from SWE
+
 
     return rundata
     # end of function setgeo
